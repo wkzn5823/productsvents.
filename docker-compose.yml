@@ -1,0 +1,43 @@
+services:
+  backend:
+    image: node:20
+    container_name: react-app-backend-1
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - react-app-network
+    depends_on:
+      - db
+
+  frontend:
+    image: node:20
+    container_name: react-app-frontend-1
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - react-app-network
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:latest
+    container_name: react-app-db-1
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2903
+      POSTGRES_DB: productsvents
+    ports:
+      - "5432:5432"
+    networks:
+      - react-app-network
+
+networks:
+  react-app-network:
+    driver: bridge
