@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [imageLoaded, setImageLoaded] = useState(false)
 
-  const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+  const API_URL = `${import.meta.env.VITE_API_URL}`;
 
   const navigate = useNavigate()
   const location = useLocation()
