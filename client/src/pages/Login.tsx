@@ -18,7 +18,7 @@ const Login: React.FC = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Usamos la variable de entorno para la URL del API
-  const API_URL = `${process.env.REACT_APP_API_URL}/api`; // Esto es la URL base que configuraste en Vercel
+  const API_URL = `${process.env.VITE_APP_API_URL}/api`; // Esto es la URL base que configuraste en Vercel
   const navigate = useNavigate();
   const location = useLocation();
 
