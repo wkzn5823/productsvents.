@@ -5,9 +5,6 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
 
-
-
-
 app.use(express.json()); // 🔹 Necesario para que `req.body` funcione
 
 // Importar rutas
@@ -35,7 +32,7 @@ app.use('/api/categorias', categoriasRoutes);
 const appStart = () => {
     try {
         app.listen(PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:${PORT}`);
+            console.log(`Servidor corriendo en el puerto ${PORT}`);
         });
     } catch (error) {
         console.log(`Error: ${error.message}`);

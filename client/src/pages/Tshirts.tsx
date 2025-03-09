@@ -21,7 +21,7 @@ const Tshirts = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  const API_URL = "http://localhost:8000/api/productos"
+  const API_URL = `${process.env.REACT_APP_API_URL}/api/productos` // Combinamos la URL de la API de Vercel
 
   useEffect(() => {
     const fetchTshirts = async () => {
@@ -44,7 +44,7 @@ const Tshirts = () => {
     }
 
     fetchTshirts()
-  }, [])
+  }, [API_URL])
 
   const containerVariants = {
     hidden: { opacity: 0 },

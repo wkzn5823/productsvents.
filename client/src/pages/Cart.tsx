@@ -1,53 +1,52 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import Header from "../components/Header"
-import Footer from "../components/Footer"
-import { useCart } from "../context/CartContext"
-import axios from "axios"
-import { toast, ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import jsPDF from "jspdf"
-import { X } from "lucide-react"
+import { useEffect } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { useCart } from "../context/CartContext";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import jsPDF from "jspdf";
+import { X } from "lucide-react";
 
 function Cart() {
-  const { cart, clearCart, removeFromCart } = useCart()
+  const { cart, clearCart, removeFromCart } = useCart();
 
-  useEffect(() => {
-  }, [cart])
+  useEffect(() => {}, [cart]);
 
   // Calcular totales con seguridad
-  const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
-  const tax = subtotal * 0.21
-  const total = subtotal + tax
+  const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+  const tax = subtotal * 0.21;
+  const total = subtotal + tax;
 
   const handleFinalizarCompra = async () => {
     if (cart.length === 0) {
-      toast.warning("⚠️ Tu carrito está vacío.", { position: "top-center", autoClose: 3000 })
-      return
+      toast.warning("⚠️ Tu carrito está vacío.", { position: "top-center", autoClose: 3000 });
+      return;
     }
 
     try {
-      const token = localStorage.getItem("accessToken")
+      const token = localStorage.getItem("accessToken");
       if (!token) {
-        toast.error("⚠️ Debes iniciar sesión para finalizar la compra.", { position: "top-center", autoClose: 3000 })
-        return
+        toast.error("⚠️ Debes iniciar sesión para finalizar la compra.", { position: "top-center", autoClose: 3000 });
+        return;
       }
 
-      const usuarioData = localStorage.getItem("user")
+      const usuarioData = localStorage.getItem("user");
       if (!usuarioData) {
-        toast.error("⚠️ No se pudieron obtener los datos del usuario.", { position: "top-center", autoClose: 3000 })
-        return
+        toast.error("⚠️ No se pudieron obtener los datos del usuario.", { position: "top-center", autoClose: 3000 });
+        return;
       }
 
-      const usuario = JSON.parse(usuarioData)
-      const usuario_id = usuario?.id
-      const usuario_nombre = usuario?.nombre || "No disponible"
-      const usuario_email = usuario?.email || "No disponible"
+      const usuario = JSON.parse(usuarioData);
+      const usuario_id = usuario?.id;
+      const usuario_nombre = usuario?.nombre || "No disponible";
+      const usuario_email = usuario?.email || "No disponible";
 
       if (!usuario_id) {
-        toast.error("⚠️ No se pudo obtener el ID del usuario.", { position: "top-center", autoClose: 3000 })
-        return
+        toast.error("⚠️ No se pudo obtener el ID del usuario.", { position: "top-center", autoClose: 3000 });
+        return;
       }
 
       const pedidoData = {
@@ -62,25 +61,28 @@ function Cart() {
           precio_unitario: Number(item.price),
           subtotal: Number((Number(item.price) * item.quantity).toFixed(2)),
         })),
-      }
+      };
 
-      const response = await axios.post("http://localhost:8000/api/pedidos", pedidoData, {
+      // Usamos la variable de entorno REACT_APP_API_URL para la URL del backend
+      const API_URL = process.env.REACT_APP_API_URL; // Esto es https://productsvents.onrender.com
+
+      const response = await axios.post(`${API_URL}/api/pedidos`, pedidoData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      })
+      });
 
       if (response.status === 201) {
-        toast.success("✅ Compra realizada con éxito. Generando ticket...", { position: "top-center", autoClose: 3000 })
-        generarTicketPDF(pedidoData)
-        clearCart()
+        toast.success("✅ Compra realizada con éxito. Generando ticket...", { position: "top-center", autoClose: 3000 });
+        generarTicketPDF(pedidoData);
+        clearCart();
       } else {
-        toast.error("❌ Error al procesar la compra.", { position: "top-center", autoClose: 3000 })
+        toast.error("❌ Error al procesar la compra.", { position: "top-center", autoClose: 3000 });
       }
     } catch (error: unknown) {
-      console.error("🚨 Error al finalizar la compra:", error)
-      const errorMessage = error instanceof Error ? error.message : "Error desconocido"
-      toast.error(`❌ Error al procesar la compra: ${errorMessage}`, { position: "top-center", autoClose: 3000 })
+      console.error("🚨 Error al finalizar la compra:", error);
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      toast.error(`❌ Error al procesar la compra: ${errorMessage}`, { position: "top-center", autoClose: 3000 });
     }
-  }
+  };
 
   // 📜 Función para generar el ticket PDF
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,76 +91,74 @@ function Cart() {
       orientation: "portrait",
       unit: "mm",
       format: [80, 130],
-    })
+    });
 
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(12)
-    doc.text("TIENDA XYZ", 40, 10, { align: "center" })
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("TIENDA XYZ", 40, 10, { align: "center" });
 
-    doc.setFontSize(10)
-    doc.text("Dirección: Calle  123", 40, 15, { align: "center" })
-    doc.text("Clabe: 638180010125857119", 40, 20, { align: "center" })
-    doc.text("Enviar comprobante de pago a: ", 40, 25, { align: "center" })
-    doc.text("alexisencarnacion5823@gmail.com", 40, 30, { align: "center" })
+    doc.setFontSize(10);
+    doc.text("Dirección: Calle  123", 40, 15, { align: "center" });
+    doc.text("Clabe: 638180010125857119", 40, 20, { align: "center" });
+    doc.text("Enviar comprobante de pago a: ", 40, 25, { align: "center" });
+    doc.text("alexisencarnacion5823@gmail.com", 40, 30, { align: "center" });
 
-    doc.line(5, 33, 75, 34)
+    doc.line(5, 33, 75, 34);
 
-    doc.setFontSize(9)
-    doc.text(`Cliente: ${pedidoData.usuario_nombre}`, 5, 37)
-    doc.text(`Correo: ${pedidoData.usuario_email}`, 5, 40)
-    doc.text(`Fecha: ${new Date().toLocaleString()}`, 5, 44)
+    doc.setFontSize(9);
+    doc.text(`Cliente: ${pedidoData.usuario_nombre}`, 5, 37);
+    doc.text(`Correo: ${pedidoData.usuario_email}`, 5, 40);
+    doc.text(`Fecha: ${new Date().toLocaleString()}`, 5, 44);
 
-    doc.line(5, 46, 75, 46)
+    doc.line(5, 46, 75, 46);
 
-    let y = 50
-    doc.setFontSize(9)
-    doc.text("Cant", 5, y)
-    doc.text("Producto", 20, y)
-    doc.text("Precio", 55, y)
-    doc.text("Total", 65, y)
-    y += 5
+    let y = 50;
+    doc.setFontSize(9);
+    doc.text("Cant", 5, y);
+    doc.text("Producto", 20, y);
+    doc.text("Precio", 55, y);
+    doc.text("Total", 65, y);
+    y += 5;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pedidoData.productos.forEach((item: any) => {
-      doc.setFontSize(8)
-      doc.text(`${item.cantidad}`, 5, y)
-      doc.text(`${item.nombre}`, 20, y)
-      doc.text(`$${item.precio_unitario.toFixed(2)}`, 55, y)
-      doc.text(`$${item.subtotal.toFixed(2)}`, 65, y)
-      y += 5
-    })
+      doc.setFontSize(8);
+      doc.text(`${item.cantidad}`, 5, y);
+      doc.text(`${item.nombre}`, 20, y);
+      doc.text(`$${item.precio_unitario.toFixed(2)}`, 55, y);
+      doc.text(`$${item.subtotal.toFixed(2)}`, 65, y);
+      y += 5;
+    });
 
-    doc.line(5, y, 75, y)
-    y += 5
+    doc.line(5, y, 75, y);
+    y += 5;
 
-    doc.setFontSize(9)
-    doc.text("Subtotal:", 5, y)
-    doc.text(`$${(pedidoData.total / 1.21).toFixed(2)}`, 65, y)
+    doc.setFontSize(9);
+    doc.text("Subtotal:", 5, y);
+    doc.text(`$${(pedidoData.total / 1.21).toFixed(2)}`, 65, y);
 
-    y += 5
-    doc.text("IVA (21%):", 5, y)
-    doc.text(`$${(pedidoData.total - pedidoData.total / 1.21).toFixed(2)}`, 65, y)
+    y += 5;
+    doc.text("IVA (21%):", 5, y);
+    doc.text(`$${(pedidoData.total - pedidoData.total / 1.21).toFixed(2)}`, 65, y);
 
-    y += 5
-    doc.setFontSize(10)
-    doc.text("TOTAL A PAGAR:", 5, y)
-    doc.text(`$${pedidoData.total.toFixed(2)}`, 65, y)
+    y += 5;
+    doc.setFontSize(10);
+    doc.text("TOTAL A PAGAR:", 5, y);
+    doc.text(`$${pedidoData.total.toFixed(2)}`, 65, y);
 
-    y += 8
-    doc.setFontSize(8)
-    doc.text("Gracias por su compra", 40, y, { align: "center" })
+    y += 8;
+    doc.setFontSize(8);
+    doc.text("Gracias por su compra", 40, y, { align: "center" });
 
-    doc.save("ticket-compra.pdf")
-  }
+    doc.save("ticket-compra.pdf");
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-md mx-auto bg-white">
-          <div className="flex items-center justify-between mb-6">
-          </div>
-
+          <div className="flex items-center justify-between mb-6"></div>
 
           {cart.length === 0 ? (
             <p className="text-gray-500 text-center py-4">Tu carrito está vacío.</p>
@@ -221,8 +221,7 @@ function Cart() {
       <Footer />
       <ToastContainer />
     </div>
-  )
+  );
 }
 
-export default Cart
-
+export default Cart;

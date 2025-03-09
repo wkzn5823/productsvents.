@@ -1,62 +1,65 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from "react"
-import { useParams } from "react-router-dom"
-import axios from "axios"
-import Header from "../components/Header"
-import Footer from "../components/Footer"
-import { useCart } from "../context/CartContext"
-import { toast } from "react-hot-toast"
+import { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { useCart } from "../context/CartContext";
+import { toast } from "react-hot-toast";
 
-const CATEGORIA_ACCESORIOS: number = 3
-const TALLAS_DISPONIBLES = ["S", "M", "L", "XL", "XXL"]
+const CATEGORIA_ACCESORIOS: number = 3;
+const TALLAS_DISPONIBLES = ["S", "M", "L", "XL", "XXL"];
 const MEDIDAS_TALLAS: Record<string, { ancho: number; largo: number }> = {
   S: { ancho: 46, largo: 68 },
   M: { ancho: 50, largo: 70 },
   L: { ancho: 54, largo: 72 },
   XL: { ancho: 58, largo: 74 },
   XXL: { ancho: 62, largo: 76 },
-}
+};
 
 interface Producto {
-  id: number
-  nombre: string
-  descripcion: string
-  precio: number
-  stock: number
-  categoria_id: number
-  imagen_url: string
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  stock: number;
+  categoria_id: number;
+  imagen_url: string;
 }
 
 const ProductDetail = () => {
-  const { id } = useParams<{ id: string }>()
-  const { addToCart } = useCart()
-  const [producto, setProducto] = useState<Producto | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-  const [tallaSeleccionada, setTallaSeleccionada] = useState<string | null>(null)
+  const { id } = useParams<{ id: string }>();
+  const { addToCart } = useCart();
+  const [producto, setProducto] = useState<Producto | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [tallaSeleccionada, setTallaSeleccionada] = useState<string | null>(null);
+
+  // Usamos la variable de entorno REACT_APP_API_URL para la URL base
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchProducto = useCallback(async () => {
     try {
-      const response = await axios.get<Producto>(`http://localhost:8000/api/productos/${id}`, {
+      const response = await axios.get<Producto>(`${API_URL}/productos/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
-      })
-      setProducto(response.data)
+      });
+      setProducto(response.data);
     } catch (err) {
-      setError("Error al cargar el producto.")
+      setError("Error al cargar el producto.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [id])
+  }, [id, API_URL]);
 
   useEffect(() => {
-    fetchProducto()
-  }, [fetchProducto])
+    fetchProducto();
+  }, [fetchProducto]);
 
   const handleAddToCart = () => {
-    if (!producto) return
+    if (!producto) return;
 
     if (producto.categoria_id !== CATEGORIA_ACCESORIOS && !tallaSeleccionada) {
       toast.error("Por favor, selecciona una talla antes de añadir al carrito", {
@@ -67,8 +70,8 @@ const ProductDetail = () => {
           borderRadius: "10px",
         },
         icon: "👕",
-      })
-      return
+      });
+      return;
     }
 
     addToCart({
@@ -80,7 +83,7 @@ const ProductDetail = () => {
       price: producto.precio,
       quantity: 1,
       imageUrl: producto.imagen_url,
-    })
+    });
 
     toast.success(`¡${producto.nombre} añadido al carrito!`, {
       duration: 3000,
@@ -90,29 +93,29 @@ const ProductDetail = () => {
         borderRadius: "10px",
       },
       icon: "✨",
-    })
-  }
+    });
+  };
 
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
       </div>
-    )
+    );
 
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-center text-red-500 animate-bounce">{error}</p>
       </div>
-    )
+    );
 
   if (!producto)
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-center text-gray-500 animate-pulse">Producto no encontrado.</p>
       </div>
-    )
+    );
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col overflow-visible">
@@ -179,7 +182,7 @@ const ProductDetail = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ProductDetail
+export default ProductDetail;

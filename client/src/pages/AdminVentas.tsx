@@ -1,79 +1,84 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import axios from "axios"
-import { motion } from "framer-motion"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
-import { DollarSign, ShoppingCart, Package2 } from "lucide-react"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { DollarSign, ShoppingCart, Package2 } from "lucide-react";
 
 interface Pedido {
-  usuario_nombre: string
-  usuario_email: string
-  id: number
-  fecha: string
-  total: number
-  estado: string
+  usuario_nombre: string;
+  usuario_email: string;
+  id: number;
+  fecha: string;
+  total: number;
+  estado: string;
 }
 
 export default function AdminVentas() {
-  const [ventasTotales, setVentasTotales] = useState<number>(0)
-  const [cantidadVentas, setCantidadVentas] = useState<number>(0)
-  const [ventasActivas, setVentasActivas] = useState<number>(0)
-  const [ventasRecientes, setVentasRecientes] = useState<Pedido[]>([])
-  const [ventasPorMes, setVentasPorMes] = useState<{ mes: string; total: number }[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [ventasTotales, setVentasTotales] = useState<number>(0);
+  const [cantidadVentas, setCantidadVentas] = useState<number>(0);
+  const [ventasActivas, setVentasActivas] = useState<number>(0);
+  const [ventasRecientes, setVentasRecientes] = useState<Pedido[]>([]);
+  const [ventasPorMes, setVentasPorMes] = useState<{ mes: string; total: number }[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Usamos la variable de entorno REACT_APP_API_URL configurada en Vercel
+  const API_URL = process.env.REACT_APP_API_URL; // Esto es https://productsvents.onrender.com
 
   useEffect(() => {
     const fetchDatos = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        const userString = localStorage.getItem("user")
-        const user = userString ? JSON.parse(userString) : null
+        const token = localStorage.getItem("accessToken");
+        const userString = localStorage.getItem("user");
+        const user = userString ? JSON.parse(userString) : null;
 
         if (!user || ![1, 3].includes(user.role_id)) {
-          console.error("🚨 No tienes permisos para obtener pedidos.")
-          return
+          console.error("🚨 No tienes permisos para obtener pedidos.");
+          return;
         }
 
-        const pedidosRes = await axios.get("http://localhost:8000/api/pedidos", {
+        // Usamos la variable de entorno para construir la URL completa
+        const pedidosRes = await axios.get(`${API_URL}/api/pedidos`, {
           headers: { Authorization: `Bearer ${token}` },
-        })
+        });
 
-        const pedidos: Pedido[] = pedidosRes.data.pedidos
-        setVentasTotales(pedidos.reduce((sum, p) => sum + Number(p.total ?? 0), 0))
-        setCantidadVentas(pedidos.length)
-        setVentasActivas(pedidos.filter((p) => ["pendiente", "procesando"].includes(p.estado)).length)
-        setVentasRecientes(pedidos.slice(-5))
+        const pedidos: Pedido[] = pedidosRes.data.pedidos;
+        setVentasTotales(pedidos.reduce((sum, p) => sum + Number(p.total ?? 0), 0));
+        setCantidadVentas(pedidos.length);
+        setVentasActivas(pedidos.filter((p) => ["pendiente", "procesando"].includes(p.estado)).length);
+        setVentasRecientes(pedidos.slice(-5));
 
         const ventasMensuales: { [key: number]: number } = pedidos.reduce(
           (acc, p) => {
-            if (!p.fecha) return acc
-            const mesNumero = new Date(p.fecha).getMonth()
-            const totalVenta = Number(p.total) || 0
-            acc[mesNumero] = (acc[mesNumero] || 0) + totalVenta
-            return acc
+            if (!p.fecha) return acc;
+            const mesNumero = new Date(p.fecha).getMonth();
+            const totalVenta = Number(p.total) || 0;
+            acc[mesNumero] = (acc[mesNumero] || 0) + totalVenta;
+            return acc;
           },
-          {} as { [key: number]: number },
-        )
+          {} as { [key: number]: number }
+        );
 
-        const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+        const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
         const datosGrafica = meses.map((mes, index) => ({
           mes,
           total: ventasMensuales[index] || 0,
-        }))
+        }));
 
-        setVentasPorMes(datosGrafica)
-        setIsLoaded(true)
+        setVentasPorMes(datosGrafica);
+        setIsLoaded(true);
       } catch (err) {
-        console.error("🚨 Error al obtener datos:", err)
+        console.error("🚨 Error al obtener datos:", err);
       }
-    }
+    };
 
-    fetchDatos()
-  }, [])
+    fetchDatos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -83,7 +88,7 @@ export default function AdminVentas() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -95,7 +100,7 @@ export default function AdminVentas() {
         stiffness: 50,
       },
     },
-  }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -210,6 +215,5 @@ export default function AdminVentas() {
       </motion.div>
       <Footer />
     </div>
-  )
+  );
 }
-

@@ -75,8 +75,8 @@ const Legal = () => {
           Resolución de disputas
         </motion.h2>
         <motion.p variants={itemVariants}>
-          Cualquier disputa relacionada con el uso de nuestro sitio web o servicios estará sujeta a las leyes de España.
-          Ambas partes se someten a la jurisdicción exclusiva de los tribunales de Madrid.
+          Cualquier disputa relacionada con el uso de nuestro sitio web o servicios estará sujeta a las leyes de México.
+          Ambas partes se someten a la jurisdicción exclusiva de los tribunales de México.
         </motion.p>
       </motion.div>
     </PolicyLayout>
