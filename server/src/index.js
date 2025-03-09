@@ -36,6 +36,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api', productoRoutes);  // Nueva ruta de productos
 app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/categorias', categoriasRoutes);
+
 // Iniciar servidor
 const appStart = () => {
     try {
