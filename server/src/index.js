@@ -4,7 +4,6 @@ const { PORT } = require('./constants');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
-const { CLIENT_URL } = process.env;
 
 app.use(express.json()); // 🔹 Necesario para que `req.body` funcione
 
@@ -23,9 +22,10 @@ app.use(cookieParser());
 
 // Habilitar CORS para todos los dominios (puedes especificar el dominio si lo deseas)
 app.use(cors({
-  origin: CLIENT_URL, // Permitir solo solicitudes desde tu frontend
+  origin: 'https://productsvents.vercel.app', // Permitir solo solicitudes desde tu frontend
   methods: ['GET', 'POST'],  // Métodos permitidos
-  allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true  // Encabezados permitidos
 }));
 
 app.use(passport.initialize());
