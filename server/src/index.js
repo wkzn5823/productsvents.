@@ -19,7 +19,6 @@ require('./middlewares/passport-middleware');
 // Inicializar middlewares
 app.use(express.json());
 app.use(cookieParser());
-const cors = require('cors');
 
 // Habilitar CORS para todos los dominios (puedes especificar el dominio si lo deseas)
 app.use(cors({
