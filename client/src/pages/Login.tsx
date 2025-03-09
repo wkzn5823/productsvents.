@@ -1,58 +1,57 @@
-"use client";
+"use client"
 
-import type React from "react";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-import { motion } from "framer-motion";
-import ElegantNotification from "../components/ElegantNotification";
-import myImage from '../assets/imgI.webp';
+import type React from "react"
+import { useState, useEffect } from "react"
+import axios from "axios"
+import { useNavigate, useLocation } from "react-router-dom"
+import { FaEnvelope, FaLock, FaUser } from "react-icons/fa"
+import { motion } from "framer-motion"
+import ElegantNotification from "../components/ElegantNotification"
+import myImage from '../assets/imgI.webp'; 
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
-  const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [name, setName] = useState("")
+  const [isLogin, setIsLogin] = useState(true)
+  const [notification, setNotification] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
-  // Usamos la variable de entorno para la URL del API
-  const API_URL = `${process.env.VITE_APP_API_URL}/api`; // Esto es la URL base que configuraste en Vercel
-  const navigate = useNavigate();
-  const location = useLocation();
+  const API_URL = "https://productsvents.onrender.com/api"
+
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const accessToken = localStorage.getItem("accessToken")
+    const user = JSON.parse(localStorage.getItem("user") || "{}")
 
     if (accessToken && user.role_id) {
-      navigate(user.role_id === 1 ? "/admin-dashboard" : "/home");
+      navigate(user.role_id === 1 ? "/admin-dashboard" : "/home")
     }
-  }, [navigate]);
+  }, [navigate])
 
   useEffect(() => {
-    setTimeout(() => setImageLoaded(true), 100);
-  }, []);
+    setTimeout(() => setImageLoaded(true), 100)
+  }, [])
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const accessToken = localStorage.getItem("accessToken")
+    const user = JSON.parse(localStorage.getItem("user") || "{}")
 
     if (accessToken && user.role_id === 1 && location.pathname !== "/admin-dashboard") {
-      navigate("/admin-dashboard");
+      navigate("/admin-dashboard")
     }
-  }, [navigate, location]);
+  }, [navigate, location])
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setNotification(null);
+    event.preventDefault()
+    setNotification(null)
 
     try {
-      let response;
+      let response
 
       if (isLogin) {
-        // Usamos el API_URL para la URL de login
         response = await axios.post(
           `${API_URL}/auth/login`,
           {
@@ -60,13 +59,14 @@ const Login: React.FC = () => {
             contraseña: password,
           },
           { withCredentials: true },
-        );
+        )
 
         if (response.data.success) {
-          const user = response.data.user;
-          const token = response.data.accessToken;
+          const user = response.data.user
+          const token = response.data.accessToken
 
-          localStorage.setItem("accessToken", token);
+
+          localStorage.setItem("accessToken", token)
           localStorage.setItem(
             "user",
             JSON.stringify({
@@ -75,17 +75,17 @@ const Login: React.FC = () => {
               email: user.email,
               role_id: user.role_id,
             }),
-          );
+          )
 
-          setNotification({ type: "success", text: "Inicio de sesión exitoso. Redirigiendo..." });
+          setNotification({ type: "success", text: "Inicio de sesión exitoso. Redirigiendo..." })
 
           setTimeout(() => {
-            navigate(user.role_id === 1 ? "/admin-dashboard" : "/home");
-            window.location.reload();
-          }, 2000);
+            navigate(user.role_id === 1 ? "/admin-dashboard" : "/home")
+            window.location.reload()
+          }, 2000)
         }
       } else {
-        // Usamos el API_URL para la URL de registro
+
         response = await axios.post(
           `${API_URL}/auth/register-client`,
           {
@@ -96,26 +96,26 @@ const Login: React.FC = () => {
           {
             headers: { "Content-Type": "application/json" },
           },
-        );
-        setNotification({ type: "success", text: "Registro exitoso. Redirigiendo a inicio de sesión..." });
+        )
+        setNotification({ type: "success", text: "Registro exitoso. Redirigiendo a inicio de sesión..." })
 
         setTimeout(() => {
-          setIsLogin(true);
-          setName("");
-          setEmail("");
-          setPassword("");
-        }, 2000);
+          setIsLogin(true)
+          setName("")
+          setEmail("")
+          setPassword("")
+        }, 2000)
       }
     } catch (err: unknown) {
-      console.error("🚨 Error en la solicitud:", err);
+      console.error("🚨 Error en la solicitud:", err)
 
       if (axios.isAxiosError(err)) {
-        setNotification({ type: "error", text: err.response?.data?.error || "Error en el proceso" });
+        setNotification({ type: "error", text: err.response?.data?.error || "Error en el proceso" })
       } else {
-        setNotification({ type: "error", text: "Ocurrió un error inesperado." });
+        setNotification({ type: "error", text: "Ocurrió un error inesperado." })
       }
     }
-  };
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
         duration: 0.3,
       },
     },
-  };
+  }
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -136,7 +136,7 @@ const Login: React.FC = () => {
       opacity: 1,
       transition: { type: "spring", stiffness: 400, damping: 20 },
     },
-  };
+  }
 
   return (
     <div style={styles.pageContainer}>
@@ -224,8 +224,8 @@ const Login: React.FC = () => {
         transition={{ duration: 0.3 }}
       />
     </div>
-  );
-};
+  )
+}
 
 const styles = {
   pageContainer: {
@@ -311,6 +311,7 @@ const styles = {
     textDecoration: "underline",
     background: "transparent",
   },
-};
+}
 
-export default Login;
+export default Login
+
