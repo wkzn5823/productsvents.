@@ -19,7 +19,15 @@ require('./middlewares/passport-middleware');
 // Inicializar middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+const cors = require('cors');
+
+// Habilitar CORS para todos los dominios (puedes especificar el dominio si lo deseas)
+app.use(cors({
+  origin: CLIENT_URL, // Permitir solo solicitudes desde tu frontend
+  methods: ['GET', 'POST'],  // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+}));
+
 app.use(passport.initialize());
 
 // Inicializar rutas

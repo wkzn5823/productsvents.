@@ -50,7 +50,8 @@ export default function AdminProductos() {
     categoria_id: "",
     imagen_url: "",
   })
-  const API_URL = `${process.env.REACT_APP_API_URL}/api/productos` // Combinamos la URL de la API de Vercel
+
+  const API_URL = `${import.meta.env.VITE_API_URL}/api/productos`;
 
   const fetchProductos = useCallback(async () => {
     setLoading(true)

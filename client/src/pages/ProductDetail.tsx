@@ -37,7 +37,8 @@ const ProductDetail = () => {
   const [tallaSeleccionada, setTallaSeleccionada] = useState<string | null>(null);
 
   // Usamos la variable de entorno REACT_APP_API_URL para la URL base
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+
 
   const fetchProducto = useCallback(async () => {
     try {

@@ -51,7 +51,7 @@ export default function AdminUsuarios() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   // Usamos la variable de entorno REACT_APP_API_URL configurada en Vercel
-  const API_URL = `${process.env.REACT_APP_API_URL}/api/auth/get-users`;  // Correcto
+  const API_URL = `${import.meta.env.VITE_API_URL}/api/auth/get-users`;
 
   useEffect(() => {
     fetchUsuarios();

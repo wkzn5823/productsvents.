@@ -27,7 +27,7 @@ export default function AdminVentas() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Usamos la variable de entorno REACT_APP_API_URL configurada en Vercel
-  const API_URL = process.env.REACT_APP_API_URL; // Esto es https://productsvents.onrender.com
+  const API_URL = `${import.meta.env.VITE_API_URL}`;
 
   useEffect(() => {
     const fetchDatos = async () => {

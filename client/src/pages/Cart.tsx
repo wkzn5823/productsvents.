@@ -64,7 +64,8 @@ function Cart() {
       };
 
       // Usamos la variable de entorno REACT_APP_API_URL para la URL del backend
-      const API_URL = process.env.REACT_APP_API_URL; // Esto es https://productsvents.onrender.com
+      const API_URL = `${import.meta.env.VITE_API_URL}`;
+
 
       const response = await axios.post(`${API_URL}/api/pedidos`, pedidoData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
