@@ -18,7 +18,7 @@ const Login: React.FC = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Usamos la variable de entorno para la URL del API
-  const API_URL = process.env.REACT_APP_API_URL; // Esto es la URL base que configuraste en Vercel
+  const API_URL = `${process.env.REACT_APP_API_URL}/api`; // Esto es la URL base que configuraste en Vercel
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
       if (isLogin) {
         // Usamos el API_URL para la URL de login
         response = await axios.post(
-          `${API_URL}/api/auth/login`,
+          `${API_URL}/auth/login`,
           {
             email,
             contraseña: password,
