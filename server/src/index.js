@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
-const { PORT, CLIENT_URL } = require('./constants');
+const { PORT } = require('./constants');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
+const { CLIENT_URL } = process.env;
 
 app.use(express.json()); // 🔹 Necesario para que `req.body` funcione
 
