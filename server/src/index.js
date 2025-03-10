@@ -40,6 +40,7 @@ app.use('/api/categorias', categoriasRoutes);
 // Iniciar servidor
 const appStart = () => {
     try {
+        const PORT = process.env.PORT || 10000;
         app.listen(PORT, () => {
             console.log(`Servidor corriendo en el puerto ${PORT}`);
         });
@@ -47,5 +48,6 @@ const appStart = () => {
         console.log(`Error: ${error.message}`);
     }
 };
+
 
 appStart();
