@@ -1,0 +1,218 @@
+/* Estilos globales */
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+/* Estilos del Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background-color: white;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.menu-button,
+.close-button {
+  padding: 0.5rem;
+  border-radius: 9999px;
+}
+
+.menu-button:hover,
+.close-button:hover {
+  background-color: #f3f4f6;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  object-fit: contain;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  font-size: 0.875rem;
+}
+
+.nav-link-content {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Estilos del Sidebar */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 16rem;
+  background-color: white;
+  z-index: 50;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-content {
+  padding: 1rem;
+}
+
+.sidebar-nav {
+  margin-top: 2rem;
+}
+
+.sidebar-nav-list,
+.sidebar-footer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar-nav-link {
+  display: block;
+  padding: 0.5rem 0;
+}
+
+.sidebar-nav-link:hover {
+  color: #ec4899;
+}
+
+.sidebar-footer {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Estilos de la página principal */
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding-top: 4rem;
+}
+
+.product-grid {
+  display: flex;
+  gap: 6rem;
+  padding: 1rem;
+  max-width: 90vw;
+}
+
+/* Estilos de PolaroidCard */
+.polaroid-card {
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.polaroid-card:hover {
+  transform: scale(1.02);
+}
+
+.polaroid-card-inner {
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: rotate(1deg);
+  transition: transform 0.3s;
+}
+
+.polaroid-card-inner:hover {
+  transform: rotate(0);
+}
+
+.polaroid-image-container {
+  position: relative;
+  width: 500px;
+  aspect-ratio: 1;
+}
+
+.polaroid-image {
+  object-fit: cover;
+}
+
+.polaroid-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.polaroid-card:hover .polaroid-overlay {
+  opacity: 1;
+}
+
+.polaroid-overlay.pink {
+  mix-blend-mode: multiply;
+}
+
+.polaroid-doodle {
+  width: 100%;
+  height: 100%;
+}
+
+.polaroid-content {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.polaroid-title {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  font-size: 1.5rem;
+  font-family: Arial, sans-serif;
+}
+
+.polaroid-subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
