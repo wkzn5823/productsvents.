@@ -11,7 +11,7 @@ const router = Router();
 router.get('/get-users', userAuth, verifyRole([1]), getUsers);
 
 // 🔹 Rutas protegidas
-router.get('/protected', userAuth, protected);
+router.get('/protected', userAuth, protectedRoute);
 router.post('/logout', userAuth, logout);
 router.post('/refresh', refreshToken);
 
