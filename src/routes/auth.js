@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const db = require('../db');
 const bcrypt = require('bcryptjs');  // Asegurar que esté importado
-const { login, register, refreshToken, logout, getUsers,   protected: protected } = require('../controllers/auth');
+const { login, register, refreshToken, logout, getUsers,   protected: protectedRoute } = require('../controllers/auth');
 const { validationMiddleware } = require('../middlewares/validations-middleware');
 const { userAuth, verifyRole } = require('../middlewares/auth-middleware');
 
