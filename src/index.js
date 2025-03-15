@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 // Habilitar CORS para todos los dominios (puedes especificar el dominio si lo deseas)
 app.use(cors({
-  origin: 'https://front-2y324swr6-wkzn5823s-projects.vercel.app', // Permitir solo solicitudes desde tu frontend
+  origin: 'https://front-bxcbm6wiv-wkzn5823s-projects.vercel.app', // Permitir solo solicitudes desde tu frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true  // Encabezados permitidos
