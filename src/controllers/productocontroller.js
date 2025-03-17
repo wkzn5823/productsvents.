@@ -1,9 +1,10 @@
-const db = require('../db');
+const db = require("../db");
+const { logger } = require("../middlewares/logger"); // ✅ Importamos Winston
 
-// 🔹 Función para obtener productos con opción de filtrado por categoría
+// 🔹 Obtener productos con opción de filtrado por categoría
 exports.getProductos = async (req, res) => {
     try {
-        const { categoria_id } = req.query; // Obtener el parámetro de la URL
+        const { categoria_id } = req.query;
         let query = `
             SELECT productos.id, productos.nombre, productos.descripcion, productos.precio, 
                    productos.stock, productos.imagen_url, productos.categoria_id, 
@@ -13,65 +14,68 @@ exports.getProductos = async (req, res) => {
         `;
         let values = [];
 
-        // Filtrar por categoría si se envía el parámetro
         if (categoria_id) {
             if (isNaN(categoria_id)) {
+                logger.warn(`⚠️ Consulta rechazada: categoria_id inválido (${categoria_id})`);
                 return res.status(400).json({ error: "El parámetro categoria_id debe ser un número válido." });
             }
-            query += ' WHERE productos.categoria_id = $1';
+            query += " WHERE productos.categoria_id = $1";
             values.push(categoria_id);
         }
 
         const { rows } = await db.query(query, values);
+        logger.info(`✅ Productos obtenidos (${rows.length} resultados)`);
         return res.status(200).json(rows);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al obtener los productos' });
+        logger.error(`❌ Error al obtener productos: ${error.message}`);
+        return res.status(500).json({ error: "Error al obtener los productos" });
     }
 };
 
-// 🔹 Función para obtener un producto por ID
+// 🔹 Obtener un producto por ID
 exports.getProductoById = async (req, res) => {
     const { id } = req.params;
 
     try {
         if (isNaN(id)) {
+            logger.warn(`⚠️ ID inválido en getProductoById: ${id}`);
             return res.status(400).json({ error: "El ID del producto debe ser un número válido." });
         }
 
-        const query = 'SELECT * FROM productos WHERE id = $1';
+        const query = "SELECT * FROM productos WHERE id = $1";
         const { rows } = await db.query(query, [id]);
 
         if (rows.length === 0) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+            logger.warn(`⚠️ Producto no encontrado con ID: ${id}`);
+            return res.status(404).json({ error: "Producto no encontrado" });
         }
 
-        return res.status(200).json(rows[0]); // Devuelve el producto encontrado
+        logger.info(`✅ Producto obtenido: ${rows[0].nombre} (ID: ${id})`);
+        return res.status(200).json(rows[0]);
     } catch (error) {
-        return res.status(500).json({ error: 'Error en el servidor' });
+        logger.error(`❌ Error en getProductoById: ${error.message}`);
+        return res.status(500).json({ error: "Error en el servidor" });
     }
 };
 
-// 🔹 Función para agregar un nuevo producto
+// 🔹 Agregar un nuevo producto
 exports.addProducto = async (req, res) => {
     const { nombre, descripcion, precio, stock, categoria_id, imagen_url } = req.body;
 
-    // 🔹 Validar que todos los campos estén presentes
     if (!nombre || !descripcion || !precio || !stock || !categoria_id || !imagen_url) {
+        logger.warn("⚠️ Intento de agregar producto con datos incompletos");
         return res.status(400).json({ error: "Todos los campos son obligatorios" });
     }
 
-    // 🔹 Validación del precio y stock
-    if (isNaN(precio) || precio <= 0) {
-        return res.status(400).json({ error: "El precio debe ser un número positivo." });
-    }
-    if (isNaN(stock) || stock < 0) {
-        return res.status(400).json({ error: "El stock debe ser un número no negativo." });
+    if (isNaN(precio) || precio <= 0 || isNaN(stock) || stock < 0) {
+        logger.warn("⚠️ Precio o stock inválidos en addProducto");
+        return res.status(400).json({ error: "Precio y stock deben ser valores numéricos positivos" });
     }
 
     try {
-        // 🔹 Verificar si la categoría existe antes de insertar el producto
         const categoria = await db.query("SELECT * FROM categorias WHERE id = $1", [categoria_id]);
         if (categoria.rowCount === 0) {
+            logger.warn(`⚠️ Intento de agregar producto con categoría inexistente (ID: ${categoria_id})`);
             return res.status(400).json({ error: "La categoría no existe" });
         }
 
@@ -81,35 +85,33 @@ exports.addProducto = async (req, res) => {
             [nombre, descripcion, precio, stock, categoria_id, imagen_url]
         );
 
+        logger.info(`✅ Producto agregado: ${nombre} (ID: ${rows[0].id})`);
         return res.status(201).json({ success: true, producto: rows[0] });
-
     } catch (error) {
-        console.error(error.message);  // Solo registramos el error en el servidor
-        return res.status(500).json({ error: 'Error al agregar producto' });
+        logger.error(`❌ Error en addProducto: ${error.message}`);
+        return res.status(500).json({ error: "Error al agregar producto" });
     }
 };
 
-// 🔹 Función para actualizar un producto
+// 🔹 Actualizar un producto
 exports.updateProducto = async (req, res) => {
     try {
         const { id } = req.params;
         const { nombre, descripcion, precio, stock, categoria_id, imagen_url } = req.body;
 
         if (isNaN(id)) {
+            logger.warn(`⚠️ ID inválido en updateProducto: ${id}`);
             return res.status(400).json({ error: "El ID del producto debe ser un número válido." });
         }
 
-        // Validación de los campos
         if (!nombre || !descripcion || !precio || !stock || !categoria_id || !imagen_url) {
+            logger.warn(`⚠️ Intento de actualización con datos incompletos (Producto ID: ${id})`);
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
 
-        // Validación del precio y stock
-        if (isNaN(precio) || precio <= 0) {
-            return res.status(400).json({ error: "El precio debe ser un número positivo." });
-        }
-        if (isNaN(stock) || stock < 0) {
-            return res.status(400).json({ error: "El stock debe ser un número no negativo." });
+        if (isNaN(precio) || precio <= 0 || isNaN(stock) || stock < 0) {
+            logger.warn("⚠️ Precio o stock inválidos en updateProducto");
+            return res.status(400).json({ error: "Precio y stock deben ser valores numéricos positivos" });
         }
 
         const { rowCount } = await db.query(
@@ -120,29 +122,39 @@ exports.updateProducto = async (req, res) => {
         );
 
         if (rowCount === 0) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+            logger.warn(`⚠️ Producto no encontrado en updateProducto (ID: ${id})`);
+            return res.status(404).json({ error: "Producto no encontrado" });
         }
 
-        res.json({ success: true, message: 'Producto actualizado correctamente' });
+        logger.info(`✅ Producto actualizado (ID: ${id})`);
+        res.json({ success: true, message: "Producto actualizado correctamente" });
     } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ error: 'Error al actualizar el producto' });
+        logger.error(`❌ Error en updateProducto: ${error.message}`);
+        res.status(500).json({ error: "Error al actualizar el producto" });
     }
 };
 
-// 🔹 Función para eliminar un producto
+// 🔹 Eliminar un producto
 exports.deleteProducto = async (req, res) => {
     const { id } = req.params;
 
     try {
         if (isNaN(id)) {
+            logger.warn(`⚠️ ID inválido en deleteProducto: ${id}`);
             return res.status(400).json({ error: "El ID del producto debe ser un número válido." });
         }
 
-        await db.query('DELETE FROM productos WHERE id = $1', [id]);
-        return res.status(200).json({ success: true, message: 'Producto eliminado' });
+        const { rowCount } = await db.query("DELETE FROM productos WHERE id = $1", [id]);
+
+        if (rowCount === 0) {
+            logger.warn(`⚠️ Intento de eliminar producto inexistente (ID: ${id})`);
+            return res.status(404).json({ error: "Producto no encontrado" });
+        }
+
+        logger.info(`✅ Producto eliminado (ID: ${id})`);
+        return res.status(200).json({ success: true, message: "Producto eliminado" });
     } catch (error) {
-        console.error(error.message);
-        return res.status(500).json({ error: 'Error al eliminar producto' });
+        logger.error(`❌ Error en deleteProducto: ${error.message}`);
+        return res.status(500).json({ error: "Error al eliminar producto" });
     }
 };
