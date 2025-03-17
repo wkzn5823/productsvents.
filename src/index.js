@@ -50,13 +50,14 @@ process.on("unhandledRejection", (err) => {
 
 // Iniciar servidor
 const appStart = () => {
-  try {
-    app.listen(PORT, () => {
-      logger.info(`🚀 Servidor corriendo en el puerto ${PORT}`);
-    });
-  } catch (error) {
-    logger.error(`❌ Error al iniciar el servidor: ${error.message}`);
-  }
-};
+    try {
+      app.listen(PORT, () => {
+        logger.info(`Servidor corriendo en el puerto ${PORT}`); 
+      });
+    } catch (error) {
+      logger.error(`Error al iniciar el servidor: ${error.message}`);
+    }
+  };
+  
 
 appStart();
