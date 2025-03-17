@@ -22,7 +22,7 @@ require("./middlewares/passport-middleware");
 
 app.use(
   cors({
-    origin: "https://front-bxcbm6wiv-wkzn5823s-projects.vercel.app",
+    origin: "https://front-rj6daociw-wkzn5823s-projects.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
