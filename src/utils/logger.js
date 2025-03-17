@@ -1,5 +1,7 @@
 const winston = require("winston");
 const path = require("path");
+const { LogtailTransport } = require("@logtail/winston");
+const logtail = require("./logger"); // Importamos Logtail
 
 // Configuración de los niveles de logs
 const levels = {
@@ -26,6 +28,7 @@ const transports = [
   new winston.transports.Console({ level: "debug" }),
   new winston.transports.File({ filename: path.join(__dirname, "../../logs/error.log"), level: "error" }),
   new winston.transports.File({ filename: path.join(__dirname, "../../logs/combined.log") }),
+  new LogtailTransport(logtail), // 🚀 Agregamos Logtail como destino de logs
 ];
 
 // Instancia del logger
