@@ -12,7 +12,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
 
-// 📌 Middleware para subir logs en cada petición
 app.use((req, res, next) => {
     logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
   
@@ -22,7 +21,7 @@ app.use((req, res, next) => {
        git config --global user.name "wkzn5823" && 
        git add logs/*.log && 
        git commit -m "🚀 Logs actualizados" && 
-       GIT_ASKPASS=echo "echo $GITHUB_PAT" git push`,
+       git push https://$GITHUB_PAT@github.com/wkzn5823/productsvents..git`,
       (error, stdout, stderr) => {
         if (error) {
           console.error("❌ Error al subir logs:", error);
@@ -34,6 +33,7 @@ app.use((req, res, next) => {
   
     next();
   });
+  
   
   
 
