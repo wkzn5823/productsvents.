@@ -13,3 +13,6 @@
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:44:04.696Z"}
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:44:34.147Z"}
 {"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/productos","timestamp":"2025-03-18T07:44:41.735Z"}
+{"level":"info","message":"📥 Nueva solicitud: GET /api/productos","timestamp":"2025-03-18T07:44:41.955Z"}
+{"level":"info","message":"🔑 Usuario autenticado: ID 5, Email: test@gmail.com","timestamp":"2025-03-18T07:44:41.962Z"}
+{"level":"info","message":"📋 Solicitando todos los productos...","timestamp":"2025-03-18T07:44:41.962Z"}
