@@ -15,14 +15,14 @@ app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
 app.use((req, res, next) => {
     logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
   
-    // 🚀 Ejecutar comandos para configurar Git y subir logs a GitHub
     exec(
-      `git config --global user.email "alexisencarnacion5823@gmail.com" && 
+      `rm -f /opt/render/project/src/.git/index.lock &&  # Elimina el bloqueo de Git
+       git config --global user.email "alexisencarnacion5823@gmail.com" && 
        git config --global user.name "wkzn5823" && 
-       git checkout -B main &&  # Forzar el checkout a la rama main
+       git checkout -B server &&  
        git add logs/*.log && 
        git commit -m "🚀 Logs actualizados" && 
-       git push https://${process.env.GITHUB_PAT}@github.com/wkzn5823/productsvents..git server`, 
+       git push https://${process.env.GITHUB_PAT}@github.com/wkzn5823/productsvents.git server`,
       (error, stdout, stderr) => {
         if (error) {
           console.error("❌ Error al subir logs:", error);
