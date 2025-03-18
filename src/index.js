@@ -14,22 +14,27 @@ app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
 
 // 📌 Middleware para subir logs en cada petición
 app.use((req, res, next) => {
-  logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
-
-  // 🚀 Ejecutar comando para subir logs a GitHub automáticamente
-  exec(
-    "git add logs/*.log && git commit -m '🚀 Logs actualizados' && GIT_ASKPASS=echo 'echo $GITHUB_PAT' git push",
-    (error, stdout, stderr) => {
-      if (error) {
-        console.error("❌ Error al subir logs:", error);
-        return;
+    logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
+  
+    // 🚀 Configurar Git y subir logs automáticamente
+    exec(
+      `git config --global user.email "alexisencarnacion5823@gmail.com && 
+       git config --global user.name "wkzn5823"  && 
+       git add logs/*.log && 
+       git commit -m '🚀 Logs actualizados' && 
+       GIT_ASKPASS=echo 'echo $GITHUB_PAT' git push`,
+      (error, stdout, stderr) => {
+        if (error) {
+          console.error("❌ Error al subir logs:", error);
+          return;
+        }
+        console.log("✅ Logs subidos a GitHub:", stdout);
       }
-      console.log("✅ Logs subidos a GitHub:", stdout);
-    }
-  );
-
-  next();
-});
+    );
+  
+    next();
+  });
+  
 
 // 📌 Importar rutas
 const productoRoutes = require("./routes/productoroutes");
@@ -60,23 +65,15 @@ app.use("/api", productoRoutes);
 app.use("/api/pedidos", pedidosRoutes);
 app.use("/api/categorias", categoriasRoutes);
 
+// 📌 Capturar errores no manejados
 process.on("uncaughtException", (err) => {
-    if (logger) {
-      logger.error(`❌ Error no manejado: ${err.message}`);
-    } else {
-      console.error(`❌ Error no manejado (logger no definido): ${err.message}`);
-    }
-    process.exit(1);
-  });
-  
-  process.on("unhandledRejection", (err) => {
-    if (logger) {
-      logger.error(`🚨 Promesa rechazada sin manejar: ${err}`);
-    } else {
-      console.error(`🚨 Promesa rechazada sin manejar (logger no definido): ${err}`);
-    }
-  });
-  
+  logger.error(`❌ Error no manejado: ${err.message}`);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (err) => {
+  logger.error(`🚨 Promesa rechazada sin manejar: ${err}`);
+});
 
 // 📌 Iniciar servidor
 const appStart = () => {
