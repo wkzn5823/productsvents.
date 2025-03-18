@@ -23,3 +23,9 @@
 {"level":"info","message":"📋 Solicitando producto con ID: 6","timestamp":"2025-03-18T07:44:43.555Z"}
 {"level":"info","message":"✅ Producto obtenido: Camisa con Cuello redondo (ID: 6)","timestamp":"2025-03-18T07:44:43.655Z"}
 {"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/pedidos","timestamp":"2025-03-18T07:44:47.339Z"}
+{"level":"info","message":"📥 Nueva solicitud: POST /api/pedidos","timestamp":"2025-03-18T07:44:47.468Z"}
+{"level":"info","message":"🔑 Usuario autenticado: ID 5, Email: test@gmail.com","timestamp":"2025-03-18T07:44:47.472Z"}
+{"level":"info","message":"✅ Acceso permitido para usuario ID: 5, Rol: 3","timestamp":"2025-03-18T07:44:47.473Z"}
+{"level":"info","message":"🛒 Creando nuevo pedido para Usuario ID: 5","timestamp":"2025-03-18T07:44:47.473Z"}
+{"level":"info","message":"🛒 Creando pedido para Usuario ID: 5, Total: 242","timestamp":"2025-03-18T07:44:47.525Z"}
+{"level":"info","message":"📦 Pedido creado con ID: 53","timestamp":"2025-03-18T07:44:47.655Z"}
