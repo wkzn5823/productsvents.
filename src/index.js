@@ -1,4 +1,5 @@
 const express = require("express");
+const { exec } = require("child_process");
 const app = express();
 const { PORT } = require("./constants");
 const cookieParser = require("cookie-parser");
@@ -6,11 +7,29 @@ const passport = require("passport");
 const cors = require("cors");
 const { logger, httpLogger } = require("./middlewares/logger");
 
-
 // 📌 Middlewares esenciales
 app.use(express.json());
 app.use(cookieParser());
 app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
+
+// 📌 Middleware para subir logs en cada petición
+app.use((req, res, next) => {
+  logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
+
+  // 🚀 Ejecutar comando para subir logs a GitHub automáticamente
+  exec(
+    "git add logs/*.log && git commit -m '🚀 Logs actualizados' && GIT_ASKPASS=echo 'echo $GITHUB_PAT' git push",
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error("❌ Error al subir logs:", error);
+        return;
+      }
+      console.log("✅ Logs subidos a GitHub:", stdout);
+    }
+  );
+
+  next();
+});
 
 // 📌 Importar rutas
 const productoRoutes = require("./routes/productoroutes");
