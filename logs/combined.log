@@ -40,3 +40,4 @@
 {"level":"info","message":"🚀 Servidor corriendo en el puerto 10000","timestamp":"2025-03-18T07:50:09.935Z"}
 {"level":"info","message":"📥 Nueva solicitud: HEAD /","timestamp":"2025-03-18T07:50:10.395Z"}
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:50:16.451Z"}
+{"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:50:34.260Z"}
