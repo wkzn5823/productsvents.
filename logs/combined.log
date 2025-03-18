@@ -9,3 +9,5 @@
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:43:34.460Z"}
 {"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/auth/login","timestamp":"2025-03-18T07:43:55.774Z"}
 {"level":"info","message":"📥 Nueva solicitud: POST /api/auth/login","timestamp":"2025-03-18T07:43:56.257Z"}
+{"level":"info","message":"✅ Usuario autenticado: test@gmail.com","timestamp":"2025-03-18T07:43:58.426Z"}
+{"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:44:04.696Z"}
