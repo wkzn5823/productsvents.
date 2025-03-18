@@ -58,3 +58,4 @@
 {"level":"info","message":"🔑 Usuario autenticado: ID 5, Email: test@gmail.com","timestamp":"2025-03-18T07:52:46.735Z"}
 {"level":"info","message":"📋 Solicitando producto con ID: 14","timestamp":"2025-03-18T07:52:46.735Z"}
 {"level":"info","message":"✅ Producto obtenido: Camisa Beisbolera (ID: 14)","timestamp":"2025-03-18T07:52:46.768Z"}
+{"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:53:04.087Z"}
