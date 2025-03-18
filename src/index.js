@@ -6,11 +6,6 @@ const passport = require("passport");
 const cors = require("cors");
 const { logger, httpLogger } = require("./middlewares/logger");
 
-// 📌 Configurar Datadog APM (Application Performance Monitoring)
-const tracer = require("dd-trace").init({
-  service: "backend-products",
-  env: process.env.NODE_ENV || "development",
-});
 
 // 📌 Middlewares esenciales
 app.use(express.json());
