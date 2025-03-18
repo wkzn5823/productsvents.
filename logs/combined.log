@@ -49,3 +49,7 @@
 {"level":"info","message":"📥 Nueva solicitud: POST /api/auth/login","timestamp":"2025-03-18T07:52:38.829Z"}
 {"level":"info","message":"✅ Usuario autenticado: test@gmail.com","timestamp":"2025-03-18T07:52:41.033Z"}
 {"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/productos","timestamp":"2025-03-18T07:52:45.322Z"}
+{"level":"info","message":"📥 Nueva solicitud: GET /api/productos","timestamp":"2025-03-18T07:52:45.529Z"}
+{"level":"info","message":"🔑 Usuario autenticado: ID 5, Email: test@gmail.com","timestamp":"2025-03-18T07:52:45.537Z"}
+{"level":"info","message":"📋 Solicitando todos los productos...","timestamp":"2025-03-18T07:52:45.537Z"}
+{"level":"info","message":"✅ Productos obtenidos (7 resultados)","timestamp":"2025-03-18T07:52:45.628Z"}
