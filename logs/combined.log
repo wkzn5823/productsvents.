@@ -12,3 +12,4 @@
 {"level":"info","message":"✅ Usuario autenticado: test@gmail.com","timestamp":"2025-03-18T07:43:58.426Z"}
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:44:04.696Z"}
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:44:34.147Z"}
+{"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/productos","timestamp":"2025-03-18T07:44:41.735Z"}
