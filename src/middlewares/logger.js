@@ -1,31 +1,32 @@
 const winston = require("winston");
+const { DatadogTransport } = require("winston-datadog");
 const morgan = require("morgan");
-const enviarLogDatadog = require("../utils/datadog"); // Importar Datadog
 
+// 📌 DATADOG CONFIG
+const DATADOG_API_KEY = "3a4f1087c1f664fa5cd7b0cb92017e80"; // Reemplaza con tu API Key
+const SERVICE_NAME = "backend-productos"; // Nombre identificador en Datadog
+
+// 📌 Configuración de Winston con Datadog
 const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [new winston.transports.Console()],
-});
+    transports: [
+      new DatadogTransport({
+        apiKey: DATADOG_API_KEY,
+        service: SERVICE_NAME,
+        ddsource: "nodejs",
+        hostname: require("os").hostname(),
+        site: "us5.datadoghq.com" // Usa el mismo sitio que en tu configuración
+      }),
+      new winston.transports.Console(), // Logs en consola
+    ],
+  });
 
-// Middleware para enviar logs a Datadog
-const datadogLogger = (req, res, next) => {
-  const message = `${req.method} ${req.url} - ${res.statusCode}`;
-  enviarLogDatadog("info", message);
-  next();
-};
-
-// Middleware para Morgan y Datadog
+// 📌 Morgan para capturar logs HTTP y enviarlos a Winston
 const httpLogger = morgan("combined", {
   stream: {
     write: (message) => {
       logger.info({ message });
-      enviarLogDatadog("info", message);
     },
   },
 });
 
-module.exports = { logger, httpLogger, datadogLogger };
+module.exports = { logger, httpLogger };
