@@ -21,7 +21,7 @@ app.use((req, res, next) => {
        git config --global user.name "wkzn5823" && 
        git add logs/*.log && 
        git commit -m "🚀 Logs actualizados" && 
-       git push https://$GITHUB_PAT@github.com/wkzn5823/productsvents..git`,
+       git push https://${process.env.GITHUB_PAT}@github.com/wkzn5823/productsvents..git`,
       (error, stdout, stderr) => {
         if (error) {
           console.error("❌ Error al subir logs:", error);
@@ -32,9 +32,7 @@ app.use((req, res, next) => {
     );
   
     next();
-  });
-  
-  
+  });  
   
 
 // 📌 Importar rutas
