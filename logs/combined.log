@@ -46,3 +46,4 @@
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:52:05.901Z"}
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:52:34.163Z"}
 {"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/auth/login","timestamp":"2025-03-18T07:52:38.344Z"}
+{"level":"info","message":"📥 Nueva solicitud: POST /api/auth/login","timestamp":"2025-03-18T07:52:38.829Z"}
