@@ -16,3 +16,5 @@
 {"level":"info","message":"📥 Nueva solicitud: GET /api/productos","timestamp":"2025-03-18T07:44:41.955Z"}
 {"level":"info","message":"🔑 Usuario autenticado: ID 5, Email: test@gmail.com","timestamp":"2025-03-18T07:44:41.962Z"}
 {"level":"info","message":"📋 Solicitando todos los productos...","timestamp":"2025-03-18T07:44:41.962Z"}
+{"level":"info","message":"✅ Productos obtenidos (7 resultados)","timestamp":"2025-03-18T07:44:42.455Z"}
+{"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/productos/6","timestamp":"2025-03-18T07:44:43.273Z"}
