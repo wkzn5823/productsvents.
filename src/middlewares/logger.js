@@ -1,45 +1,31 @@
 const winston = require("winston");
 const morgan = require("morgan");
-const path = require("path");
-const fs = require("fs");
+const enviarLogDatadog = require("../utils/datadog"); // Importar Datadog
 
-// 📌 Token de Better Stack (asegúrate de no exponerlo públicamente)
-const BETTERSTACK_TOKEN = "NtXVhwBxvMRPvsxwzpAyRiaW";
-
-// 📌 Directorio donde guardaremos los logs en archivos
-const logDirectory = path.join(__dirname, "../logs");
-if (!fs.existsSync(logDirectory)) {
-  fs.mkdirSync(logDirectory);
-}
-
-// 📌 Configuración de Winston con formato JSON
 const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.json() // ✅ Formato estructurado en JSON
+    winston.format.json()
   ),
-  transports: [
-    new winston.transports.Console(), // ✅ Mostrar logs en consola
-    new winston.transports.File({ filename: path.join(logDirectory, "server.log"), level: "info" }),
-    new winston.transports.File({ filename: path.join(logDirectory, "errors.log"), level: "error" }),
-
-    // 📌 Enviar logs a Better Stack
-    new winston.transports.Http({
-      host: "in.logs.betterstack.com",
-      path: `/logs/${BETTERSTACK_TOKEN}`,
-      ssl: true,
-    }),
-  ],
+  transports: [new winston.transports.Console()],
 });
 
-// 📌 Morgan para registrar peticiones HTTP en Winston y Better Stack
+// Middleware para enviar logs a Datadog
+const datadogLogger = (req, res, next) => {
+  const message = `${req.method} ${req.url} - ${res.statusCode}`;
+  enviarLogDatadog("info", message);
+  next();
+};
+
+// Middleware para Morgan y Datadog
 const httpLogger = morgan("combined", {
   stream: {
     write: (message) => {
-      logger.info({ message }); // ✅ Convertimos en JSON para evitar errores
+      logger.info({ message });
+      enviarLogDatadog("info", message);
     },
   },
 });
 
-module.exports = { logger, httpLogger };
+module.exports = { logger, httpLogger, datadogLogger };
