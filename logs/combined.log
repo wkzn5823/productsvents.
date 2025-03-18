@@ -22,3 +22,4 @@
 {"level":"info","message":"🔑 Usuario autenticado: ID 5, Email: test@gmail.com","timestamp":"2025-03-18T07:44:43.462Z"}
 {"level":"info","message":"📋 Solicitando producto con ID: 6","timestamp":"2025-03-18T07:44:43.555Z"}
 {"level":"info","message":"✅ Producto obtenido: Camisa con Cuello redondo (ID: 6)","timestamp":"2025-03-18T07:44:43.655Z"}
+{"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/pedidos","timestamp":"2025-03-18T07:44:47.339Z"}
