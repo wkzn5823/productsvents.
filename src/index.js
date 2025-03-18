@@ -14,14 +14,15 @@ app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
 
 app.use((req, res, next) => {
     logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
-  
+
     exec(
-      `rm -f /opt/render/project/src/.git/index.lock &&  # Elimina el bloqueo de Git
-       git config --global user.email "alexisencarnacion5823@gmail.com" && 
-       git config --global user.name "wkzn5823" && 
-       git checkout -B server &&  
-       git add logs/*.log && 
-       git commit -m "🚀 Logs actualizados" && 
+      `rm -f /opt/render/project/src/.git/index.lock && \
+       git config --global user.email "alexisencarnacion5823@gmail.com" && \
+       git config --global user.name "wkzn5823" && \
+       git checkout server && \
+       git pull origin server --rebase && \
+       git add logs/*.log && \
+       git commit -m "🚀 Logs actualizados" && \
        git push https://${process.env.GITHUB_PAT}@github.com/wkzn5823/productsvents..git server`,
       (error, stdout, stderr) => {
         if (error) {
@@ -31,9 +32,10 @@ app.use((req, res, next) => {
         console.log("✅ Logs subidos a GitHub:", stdout);
       }
     );
-  
+
     next();
-  });
+});
+
   
   
 
