@@ -5,11 +5,12 @@ const { PORT } = require("./constants");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cors = require("cors");
-const { logger } = require("./middlewares/logger");
+const { logger, httpLogger } = require("./middlewares/logger");
 
 // 📌 Middlewares esenciales
 app.use(express.json());
 app.use(cookieParser());
+app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
 
 // 📌 Middleware para subir logs en cada petición
 app.use((req, res, next) => {
@@ -59,15 +60,23 @@ app.use("/api", productoRoutes);
 app.use("/api/pedidos", pedidosRoutes);
 app.use("/api/categorias", categoriasRoutes);
 
-// 📌 Capturar errores no manejados
 process.on("uncaughtException", (err) => {
-  logger.error(`❌ Error no manejado: ${err.message}`);
-  process.exit(1);
-});
-
-process.on("unhandledRejection", (err) => {
-  logger.error(`🚨 Promesa rechazada sin manejar: ${err}`);
-});
+    if (logger) {
+      logger.error(`❌ Error no manejado: ${err.message}`);
+    } else {
+      console.error(`❌ Error no manejado (logger no definido): ${err.message}`);
+    }
+    process.exit(1);
+  });
+  
+  process.on("unhandledRejection", (err) => {
+    if (logger) {
+      logger.error(`🚨 Promesa rechazada sin manejar: ${err}`);
+    } else {
+      console.error(`🚨 Promesa rechazada sin manejar (logger no definido): ${err}`);
+    }
+  });
+  
 
 // 📌 Iniciar servidor
 const appStart = () => {

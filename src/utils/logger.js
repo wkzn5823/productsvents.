@@ -1,47 +1,42 @@
 const winston = require("winston");
-const morgan = require("morgan");
 const path = require("path");
-const fs = require("fs");
-const DatadogTransport = require("winston-datadog");
+const { LogtailTransport } = require("@logtail/winston");
+const logtail = require("./logger"); // Importamos Logtail
 
-const DATADOG_API_KEY = process.env.DATADOG_API_KEY || "3a4f1087c1f664fa5cd7b0cb92017e80";
-const SERVICE_NAME = process.env.SERVICE_NAME || "backend-products";
+// Configuración de los niveles de logs
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  debug: 4,
+};
 
-// 📌 Directorio donde guardaremos los logs en archivos
-const logDirectory = path.join(__dirname, "../logs");
-if (!fs.existsSync(logDirectory)) {
-  fs.mkdirSync(logDirectory);
-}
+// Selección del nivel según el entorno
+const level = () => (process.env.NODE_ENV === "production" ? "info" : "debug");
 
-// 📌 Configuración de Winston con formato JSON y Datadog
+// Formatos de logs
+const format = winston.format.combine(
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+  winston.format.printf(({ timestamp, level, message }) => {
+    return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+  })
+);
+
+// Transportes (dónde se almacenan los logs)
+const transports = [
+  new winston.transports.Console({ level: "debug" }),
+  new winston.transports.File({ filename: path.join(__dirname, "../../logs/error.log"), level: "error" }),
+  new winston.transports.File({ filename: path.join(__dirname, "../../logs/combined.log") }),
+  new LogtailTransport(logtail), // 🚀 Agregamos Logtail como destino de logs
+];
+
+// Instancia del logger
 const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: path.join(logDirectory, "server.log"), level: "info" }),
-    new winston.transports.File({ filename: path.join(logDirectory, "errors.log"), level: "error" }),
-
-    // 📌 Enviar logs a Datadog
-    new DatadogTransport({
-      apiKey: DATADOG_API_KEY,
-      service: SERVICE_NAME,
-      hostname: "api.datadoghq.com",
-      ddsource: "nodejs",
-    }),
-  ],
+  level: level(),
+  levels,
+  format,
+  transports,
 });
 
-// 📌 Morgan para registrar peticiones HTTP en Winston y Datadog
-const httpLogger = morgan("combined", {
-  stream: {
-    write: (message) => {
-      logger.info({ message });
-    },
-  },
-});
-
-module.exports = { logger, httpLogger };
+module.exports = logger;
