@@ -16,13 +16,13 @@ app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
 app.use((req, res, next) => {
     logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
   
-    // 🚀 Configurar Git y subir logs automáticamente
+    // 🚀 Ejecutar comandos para configurar Git y subir logs a GitHub
     exec(
-      `git config --global user.email "alexisencarnacion5823@gmail.com && 
-       git config --global user.name "wkzn5823"  && 
+      `git config --global user.email "alexisencarnacion5823@gmail.com" && 
+       git config --global user.name "wkzn5823" && 
        git add logs/*.log && 
-       git commit -m '🚀 Logs actualizados' && 
-       GIT_ASKPASS=echo 'echo $GITHUB_PAT' git push`,
+       git commit -m "🚀 Logs actualizados" && 
+       GIT_ASKPASS=echo "echo $GITHUB_PAT" git push`,
       (error, stdout, stderr) => {
         if (error) {
           console.error("❌ Error al subir logs:", error);
@@ -34,6 +34,7 @@ app.use((req, res, next) => {
   
     next();
   });
+  
   
 
 // 📌 Importar rutas
