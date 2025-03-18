@@ -7,3 +7,4 @@
 {"level":"info","message":"📥 Nueva solicitud: HEAD /","timestamp":"2025-03-18T07:43:27.454Z"}
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:43:33.467Z"}
 {"level":"info","message":"📥 Nueva solicitud: GET /","timestamp":"2025-03-18T07:43:34.460Z"}
+{"level":"info","message":"📥 Nueva solicitud: OPTIONS /api/auth/login","timestamp":"2025-03-18T07:43:55.774Z"}
