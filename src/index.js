@@ -5,12 +5,11 @@ const { PORT } = require("./constants");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cors = require("cors");
-const { logger, httpLogger } = require("./middlewares/logger");
+const { logger } = require("./middlewares/logger");
 
 // 📌 Middlewares esenciales
 app.use(express.json());
 app.use(cookieParser());
-app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
 
 // 📌 Middleware para subir logs en cada petición
 app.use((req, res, next) => {
