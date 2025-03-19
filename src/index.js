@@ -25,7 +25,7 @@ const subirLogsAGitHub = () => {
        git checkout -B server && \
        git add logs/*.log && \
        git commit -m "🚀 Logs actualizados" && \
-       git push https://${process.env.GITHUB_PAT}@github.com/wkzn5823/productsvents.git server`,
+       git push https://${process.env.GITHUB_PAT}@github.com/wkzn5823/productsvents..git server`,
       (error, stdout, stderr) => {
         if (error) {
           console.error("❌ Error al subir logs:", error);
