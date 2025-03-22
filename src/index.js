@@ -56,7 +56,7 @@ require("./middlewares/passport-middleware");
 // 📌 Configuración de CORS
 app.use(
   cors({
-    origin: "https://front-3pwvaf8hy-wkzn5823s-projects.vercel.app",
+    origin: "https://front-bpsp3g9ar-wkzn5823s-projects.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
