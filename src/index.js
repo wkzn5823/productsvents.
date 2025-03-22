@@ -5,17 +5,18 @@ const { PORT } = require("./constants");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cors = require("cors");
-const { logger, httpLogger } = require("./middlewares/logger");
+const { logger, httpLogger, logToDatabase} = require("./middlewares/logger");
+
 
 // 📌 Middlewares esenciales
 app.use(express.json());
 app.use(cookieParser());
 app.use(httpLogger); // ✅ Morgan registrará todas las peticiones HTTP
-
+app.use(logToDatabase); // Esto irá antes de tus rutas
 // 📌 Almacenar logs temporalmente en un buffer
 let logPending = false;
 
-const subirLogsAGitHub = () => {
+/* const subirLogsAGitHub = () => {
   if (logPending) {
     console.log("🚀 Subiendo logs a GitHub...");
     exec(
@@ -36,7 +37,7 @@ const subirLogsAGitHub = () => {
       }
     );
   }
-};
+}; */
 
 // 📌 Ejecutar la subida de logs cada 2 minutos (120000 ms)
 setInterval(subirLogsAGitHub, 120000);
@@ -54,14 +55,14 @@ const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const pedidosRoutes = require("./routes/pedidos");
 const categoriasRoutes = require("./routes/categorias");
-
+const logsRoutes = require("./routes/logs");
 // 📌 Importar middleware de autenticación
 require("./middlewares/passport-middleware");
 
 // 📌 Configuración de CORS
 app.use(
   cors({
-    origin: "https://front-rj6daociw-wkzn5823s-projects.vercel.app",
+    origin: "https://front-3pwvaf8hy-wkzn5823s-projects.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -76,6 +77,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api", productoRoutes);
 app.use("/api/pedidos", pedidosRoutes);
 app.use("/api/categorias", categoriasRoutes);
+app.use("/api/logs", logsRoutes);
 
 // 📌 Capturar errores no manejados
 process.on("uncaughtException", (err) => {
