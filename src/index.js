@@ -42,12 +42,6 @@ let logPending = false;
 // 📌 Ejecutar la subida de logs cada 2 minutos (120000 ms)
 //setInterval(subirLogsAGitHub, 120000);
 
-// 📌 Middleware para registrar los logs sin subirlos de inmediato
-app.use((req, res, next) => {
-  logger.info(`📥 Nueva solicitud: ${req.method} ${req.url}`);
-  logPending = true; // Marca que hay cambios pendientes
-  next();
-});
 
 // 📌 Importar rutas
 const productoRoutes = require("./routes/productoroutes");
